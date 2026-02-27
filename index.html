@@ -705,7 +705,7 @@ img,video{-webkit-user-drag:none;user-select:none;pointer-events:none}
   var themeToggle = document.getElementById('themeToggle');
   var saved = localStorage.getItem('atelier-theme');
   if (saved) document.documentElement.setAttribute('data-theme', saved);
-  function updateIcon() { themeToggle.innerHTML = document.documentElement.getAttribute('data-theme') === 'dark' ? '&#9788;' : '&#9790;'; }
+  function updateIcon() { themeToggle.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '\u263C' : '\u263E'; }
   updateIcon();
   themeToggle.addEventListener('click', function() {
     var isDark = document.documentElement.getAttribute('data-theme') === 'dark';

@@ -174,25 +174,60 @@
   animation: ldFade 0.5s 1.3s var(--ease) forwards;
 }
 
-/* Progress — thin line fills under brand */
-.loader-progress {
-  width: 160px;
-  height: 1px;
-  background: rgba(250, 250, 250, 0.06);
-  margin: 20px auto 0;
+/* Scale Ruler — architectural tick marks */
+.loader-ruler {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  margin: 24px auto 0;
   position: relative;
-  overflow: hidden;
+  width: 160px;
+  height: 20px;
 }
-.loader-progress-fill {
+.loader-ruler-base {
   position: absolute;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: var(--moss);
-  transform: scaleX(0);
-  transform-origin: left;
-  animation: ldProgress 1.4s 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  bottom: 0; left: 0;
+  width: 100%; height: 1px;
+  background: rgba(250, 250, 250, 0.08);
 }
-@keyframes ldProgress { to { transform: scaleX(1); } }
+.loader-ruler-fill {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: var(--moss);
+  animation: ldRulerFill 1.6s 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.loader-tick {
+  position: absolute;
+  bottom: 1px;
+  width: 1px;
+  background: rgba(92, 107, 84, 0.5);
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: bottom;
+}
+/* 9 ticks at 0%, 12.5%, 25%, 37.5%, 50%, 62.5%, 75%, 87.5%, 100% */
+.loader-tick:nth-child(3) { left: 0; height: 10px; animation: ldTick 0.3s 0.9s var(--ease) forwards; }
+.loader-tick:nth-child(4) { left: 12.5%; height: 5px; animation: ldTick 0.3s 1.0s var(--ease) forwards; }
+.loader-tick:nth-child(5) { left: 25%; height: 8px; animation: ldTick 0.3s 1.1s var(--ease) forwards; }
+.loader-tick:nth-child(6) { left: 37.5%; height: 5px; animation: ldTick 0.3s 1.2s var(--ease) forwards; }
+.loader-tick:nth-child(7) { left: 50%; height: 10px; animation: ldTick 0.3s 1.3s var(--ease) forwards; }
+.loader-tick:nth-child(8) { left: 62.5%; height: 5px; animation: ldTick 0.3s 1.4s var(--ease) forwards; }
+.loader-tick:nth-child(9) { left: 75%; height: 8px; animation: ldTick 0.3s 1.5s var(--ease) forwards; }
+.loader-tick:nth-child(10) { left: 87.5%; height: 5px; animation: ldTick 0.3s 1.6s var(--ease) forwards; }
+.loader-tick:nth-child(11) { left: 100%; height: 10px; animation: ldTick 0.3s 1.7s var(--ease) forwards; }
+.loader-ruler-dim {
+  position: absolute;
+  bottom: -14px; right: 0;
+  font-family: var(--heading);
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: rgba(92, 107, 84, 0.35);
+  opacity: 0;
+  animation: ldFade 0.3s 1.8s var(--ease) forwards;
+}
+@keyframes ldRulerFill { to { width: 100%; } }
+@keyframes ldTick { to { opacity: 1; transform: scaleY(1); } }
 
 /* Coordinate label — like blueprint dimensions */
 .loader-coord {
@@ -2044,7 +2079,20 @@ img,video{-webkit-user-drag:none;user-select:none;pointer-events:none}
   <div class="loader-content">
     <div class="loader-brand">ATELIER</div>
     <div class="loader-sub">Design the Essence</div>
-    <div class="loader-progress"><div class="loader-progress-fill"></div></div>
+    <div class="loader-ruler">
+      <div class="loader-ruler-base"></div>
+      <div class="loader-ruler-fill"></div>
+      <div class="loader-tick"></div>
+      <div class="loader-tick"></div>
+      <div class="loader-tick"></div>
+      <div class="loader-tick"></div>
+      <div class="loader-tick"></div>
+      <div class="loader-tick"></div>
+      <div class="loader-tick"></div>
+      <div class="loader-tick"></div>
+      <div class="loader-tick"></div>
+      <div class="loader-ruler-dim">160 mm</div>
+    </div>
   </div>
 </div>
 <div class="cursor-dot"></div><div class="cursor-ring"></div><div class="cursor-label" id="cursorLabel"></div>

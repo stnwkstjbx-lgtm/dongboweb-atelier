@@ -79,7 +79,7 @@
   --border-dark: rgba(250,250,250,0.14);
 }
 
-/* ═══ LOADER ═══ */
+/* ═══ LOADER — Blueprint Crosshair ═══ */
 .loader {
   position: fixed;
   inset: 0;
@@ -94,17 +94,74 @@
 }
 .loader-content {
   text-align: center;
+  position: relative;
+  z-index: 2;
   transition: opacity 0.4s ease;
 }
 .loader.done .loader-content { opacity: 0; }
+
+/* Crosshair lines — draw from center outward */
+.loader-cross {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+.loader-cross-h, .loader-cross-v {
+  position: absolute;
+  background: rgba(92, 107, 84, 0.25);
+}
+.loader-cross-h {
+  width: 0; height: 1px;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  animation: ldCrossH 1s 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.loader-cross-v {
+  width: 1px; height: 0;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  animation: ldCrossV 1s 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes ldCrossH { to { width: 80vw; } }
+@keyframes ldCrossV { to { height: 60vh; } }
+
+/* Corner markers — architectural reference points */
+.loader-corner {
+  position: absolute;
+  width: 12px; height: 12px;
+  z-index: 1;
+  opacity: 0;
+  animation: ldCorner 0.4s 0.8s var(--ease) forwards;
+}
+.loader-corner::before, .loader-corner::after {
+  content: '';
+  position: absolute;
+  background: rgba(92, 107, 84, 0.35);
+}
+.loader-corner--tl { top: calc(50% - 60px); left: calc(50% - 120px); }
+.loader-corner--tl::before { width: 12px; height: 1px; top: 0; left: 0; }
+.loader-corner--tl::after { width: 1px; height: 12px; top: 0; left: 0; }
+.loader-corner--tr { top: calc(50% - 60px); right: calc(50% - 120px); }
+.loader-corner--tr::before { width: 12px; height: 1px; top: 0; right: 0; }
+.loader-corner--tr::after { width: 1px; height: 12px; top: 0; right: 0; }
+.loader-corner--bl { bottom: calc(50% - 60px); left: calc(50% - 120px); }
+.loader-corner--bl::before { width: 12px; height: 1px; bottom: 0; left: 0; }
+.loader-corner--bl::after { width: 1px; height: 12px; bottom: 0; left: 0; }
+.loader-corner--br { bottom: calc(50% - 60px); right: calc(50% - 120px); }
+.loader-corner--br::before { width: 12px; height: 1px; bottom: 0; right: 0; }
+.loader-corner--br::after { width: 1px; height: 12px; bottom: 0; right: 0; }
+@keyframes ldCorner { to { opacity: 1; } }
+
+/* Brand — appears after crosshair */
 .loader-brand {
   font-family: var(--heading);
-  font-size: clamp(2rem, 6vw, 3.6rem);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
   color: var(--snow);
   font-weight: 300;
   letter-spacing: 0.5em;
   opacity: 0;
-  animation: ldFade 0.8s 0.3s var(--ease) forwards;
+  animation: ldFade 0.6s 1s var(--ease) forwards;
 }
 .loader-sub {
   font-family: var(--heading);
@@ -112,33 +169,63 @@
   color: var(--concrete);
   letter-spacing: 4px;
   text-transform: uppercase;
-  margin-top: 16px;
+  margin-top: 12px;
   opacity: 0;
-  animation: ldUp 0.6s 0.8s var(--ease) forwards;
+  animation: ldFade 0.5s 1.3s var(--ease) forwards;
 }
-.loader-line {
-  width: 0;
+
+/* Progress — thin line fills under brand */
+.loader-progress {
+  width: 160px;
   height: 1px;
-  background: var(--moss);
+  background: rgba(250, 250, 250, 0.06);
   margin: 20px auto 0;
-  animation: ldLine 1.4s 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  position: relative;
+  overflow: hidden;
 }
+.loader-progress-fill {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: var(--moss);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: ldProgress 1.4s 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes ldProgress { to { transform: scaleX(1); } }
+
+/* Coordinate label — like blueprint dimensions */
+.loader-coord {
+  position: absolute;
+  bottom: calc(50% - 80px);
+  right: calc(50% - 140px);
+  font-family: var(--heading);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(92, 107, 84, 0.3);
+  opacity: 0;
+  animation: ldFade 0.4s 1.2s var(--ease) forwards;
+  z-index: 1;
+}
+
+/* Grid background — subtle */
 .loader-grid {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   pointer-events: none;
+  opacity: 0;
+  animation: ldFade 0.8s 0.4s ease forwards;
 }
 .loader-grid span {
-  border-right: 1px solid rgba(250, 250, 250, 0.04);
+  border-right: 1px solid rgba(250, 250, 250, 0.02);
 }
 .loader-grid span:last-child { border-right: none; }
 .loader.done { clip-path: inset(0 0 100% 0); }
 .loader.hidden { visibility: hidden; pointer-events: none; }
 
 @keyframes ldFade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes ldUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes ldLine { to { width: 80px; } }
 
 /* ═══ RESET ═══ */
@@ -1943,7 +2030,23 @@ img,video{-webkit-user-drag:none;user-select:none;pointer-events:none}
   <div style="padding:20px;background:#F0F0EC;text-align:center;font-family:sans-serif;color:#1A1A1A;font-size:14px">이 웹사이트는 JavaScript가 필요합니다.</div>
 </noscript>
 
-<div class="loader" id="loader"><div class="loader-grid"><span></span><span></span><span></span></div><div class="loader-content"><div class="loader-brand">ATELIER</div><div class="loader-sub">Design the Essence</div><div class="loader-line"></div></div></div>
+<div class="loader" id="loader">
+  <div class="loader-grid"><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="loader-cross">
+    <div class="loader-cross-h"></div>
+    <div class="loader-cross-v"></div>
+  </div>
+  <div class="loader-corner loader-corner--tl"></div>
+  <div class="loader-corner loader-corner--tr"></div>
+  <div class="loader-corner loader-corner--bl"></div>
+  <div class="loader-corner loader-corner--br"></div>
+  <div class="loader-coord">37.5326&deg;N 126.9948&deg;E</div>
+  <div class="loader-content">
+    <div class="loader-brand">ATELIER</div>
+    <div class="loader-sub">Design the Essence</div>
+    <div class="loader-progress"><div class="loader-progress-fill"></div></div>
+  </div>
+</div>
 <div class="cursor-dot"></div><div class="cursor-ring"></div><div class="cursor-label" id="cursorLabel"></div>
 <div class="scroll-bar" id="scrollBar"></div>
 <button class="theme-toggle" id="themeToggle" aria-label="다크모드 전환">&#9790;</button>
